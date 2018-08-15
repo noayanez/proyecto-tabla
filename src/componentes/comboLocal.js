@@ -24,7 +24,7 @@ class ComboLocal extends Component {
         const data = {
             id_eps : parseInt(epsaux,10)
         }
-        fetch("http://18.207.122.89:8080/otass-rest/MainController/getLocalidades", {
+        fetch("https://"+this.props.hostname+"/otass-rest/MainController/getLocalidades", {
             method : 'POST',
             headers : {
                 accept : '*/*',

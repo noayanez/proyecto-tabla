@@ -14,7 +14,7 @@ class ComboEps extends Component {
     }
 
     fetchDataEps(){
-        fetch("http://18.207.122.89:8080/otass-rest/MainController/getEps", {
+        fetch("https://"+this.props.hostname+"/otass-rest/MainController/getEps", {
             method : 'POST',
             headers : {
                 accept : '*/*'

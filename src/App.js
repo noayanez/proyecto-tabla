@@ -11,6 +11,7 @@ class App extends Component {
     constructor(){
         super();
         this.state = {
+            hostname : "54.197.26.144:8443",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
@@ -48,7 +49,7 @@ class App extends Component {
             id_local : parseInt(local,10),
             periodo : periodo+mes
         }
-        fetch("http://18.207.122.89:8080/otass-rest/MainController/getSaldos", {
+        fetch("https://"+this.state.hostname+"/otass-rest/MainController/getSaldos", {
             method : 'POST',
             headers : {
                 accept : '*/*',
@@ -139,15 +140,15 @@ class App extends Component {
                         <div className="col-1"></div>
                         <div className="col-3">
                             <ComboEps eps={this.state.eps}
-                            onChange={this.handleChangeEps}/>
+                            onChange={this.handleChangeEps} hostname={this.state.hostname}/>
                         </div>
                         <div className="col-3">
                             <ComboLocal eps={this.state.eps} local={this.state.local}
-                            onChange={this.handleChangeLocal}/>
+                            onChange={this.handleChangeLocal} hostname={this.state.hostname}/>
                         </div>
                         <div className="col-3">
                             <ComboPeriodo eps={this.state.eps} local={this.state.local} periodo={this.state.periodo}
-                            onChange={this.handleChangePeriodo}/>
+                            onChange={this.handleChangePeriodo} hostname={this.state.hostname}/>
                         </div>
                         <div className="col-1"></div>
                     </div>
