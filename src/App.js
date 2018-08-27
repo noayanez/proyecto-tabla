@@ -80,7 +80,8 @@ class App extends Component {
             }
         }else{
             this.setState({
-                alerta : "Faltan campos por seleccionar."
+                alerta : "Faltan campos por seleccionar.",
+                isTableLoaded : false
             });
         }
     }
@@ -136,62 +137,84 @@ class App extends Component {
         return (
             <div className="App">
                 <div className="card">
-                    <br/>
                     <div className="row">
-                        <div className="col-1"></div>
-                        <div className="col-3">
-                            <ComboEps eps={this.state.eps}
-                            onChange={this.handleChangeEps} hostname={this.state.hostname}/>
+                        <div className="col-2"></div>
+                        <div className="col-8 formulario">
+                            <br/>
+                            <div className="row celda-otass">
+                                <div className="col-3"></div>
+                                <div className="col-6">
+                                    <a href="/">
+                                        <img className="logo-otass" src={require("./LOGO_VECTOR.png")}/>
+                                    </a>
+                                </div>
+                                <div className="col-3">
+                                    <div>
+    	                               <a className="fa fa-facebook" target="_blank" href="https://www.facebook.com/Organismo-T%C3%A9cnico-de-la-Administraci%C3%B3n-de-los-Servicios-de-Saneamiento-1169264316420107/?pnref=lhc"></a>
+                                       <a className="fa fa-twitter" target="_blank" href="https://twitter.com/OtassPeru"></a>
+                                       <a className="fa fa-flickr" target="_blank" href="https://www.flickr.com/people/140076448@N02/"></a>
+                                       <a className="fa fa-linkedin" target="_blank" href="https://www.linkedin.com/in/otassperu"></a>
+                                       <a className="fa fa-youtube" target="_blank" href="https://www.youtube.com/channel/UC7F8rA9vw-kTrSi3orChJRQ"></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div className="row">
+                                <div className="col-4">
+                                    <ComboEps eps={this.state.eps}
+                                    onChange={this.handleChangeEps} hostname={this.state.hostname}/>
+                                </div>
+                                <div className="col-4">
+                                    <ComboLocal eps={this.state.eps} local={this.state.local}
+                                    onChange={this.handleChangeLocal} hostname={this.state.hostname}/>
+                                </div>
+                                <div className="col-4">
+                                    <ComboPeriodo eps={this.state.eps} local={this.state.local} periodo={this.state.periodo}
+                                    onChange={this.handleChangePeriodo} hostname={this.state.hostname}/>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-4">
+                                    <ComboMes mes={this.state.mes}
+                                    onChange={this.handleChangeMes}/>
+                                </div>
+                                <div className="col-4">
+                                    <ComboTipo eps={this.state.eps} local={this.state.local} periodo={this.state.periodo} tipo={this.state.tipo}
+                                    onChange={this.handleChangeTipo} handleChangeDataSaldo={this.handleChangeDataSaldo}/>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <button className="btn-enviar" onClick={this.botonEnviar}>Enviar</button>
+                                </div>
+                            </div>
+                            <br/>
                         </div>
-                        <div className="col-3">
-                            <ComboLocal eps={this.state.eps} local={this.state.local}
-                            onChange={this.handleChangeLocal} hostname={this.state.hostname}/>
-                        </div>
-                        <div className="col-3">
-                            <ComboPeriodo eps={this.state.eps} local={this.state.local} periodo={this.state.periodo}
-                            onChange={this.handleChangePeriodo} hostname={this.state.hostname}/>
-                        </div>
-                        <div className="col-1"></div>
+                        <div className="col-2"></div>
                     </div>
-                    <div className="row">
-                        <div className="col-1"></div>
-                        <div className="col-3">
-                            <ComboMes mes={this.state.mes}
-                            onChange={this.handleChangeMes}/>
-                        </div>
-                        <div className="col-3">
-                            <ComboTipo eps={this.state.eps} local={this.state.local} periodo={this.state.periodo} tipo={this.state.tipo}
-                            onChange={this.handleChangeTipo} handleChangeDataSaldo={this.handleChangeDataSaldo}/>
-                        </div>
-                        <div className="col-1"></div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <button className="btn-enviar" onClick={this.botonEnviar}>Enviar</button>
-                        </div>
-                    </div>
-                    <br/>
                 </div>
                 {this.state.alerta!==""?
                     (<div className="row">
-                        <div className="col-12">
-                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                        <div className="col-2"></div>
+                        <div className="col-8">
+                            <div className="alert alert-primary alert-dismissible fade show" role="alert">
                                 {this.state.alerta}
-                                <button onClick={this.limpiarAlerta} type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <button onClick={this.limpiarAlerta} type="button" className="close" data-dismiss="alert" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                         </div>
+                        <div className="col-2"></div>
                     </div>):(null)
                 }
 
                 {this.state.isTableLoaded?
                     (<div className="contenido-tabla">
                         <div className="row">
-                            <div className="col-1"></div>
-                            <div className="col-10">
+                            <div className="col-2"></div>
+                            <div className="col-8">
                                 <table className="table">
-                                    <thead className="thead-dark">
+                                    <thead className="thead-light">
                                         <tr>
                                             <th>Cuenta</th>
                                             <th>Descripcion de cuenta</th>
@@ -214,7 +237,7 @@ class App extends Component {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="col-1"></div>
+                            <div className="col-2"></div>
                         </div>
                     </div>):(null)}
             </div>

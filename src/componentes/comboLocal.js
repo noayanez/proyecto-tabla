@@ -55,7 +55,7 @@ class ComboLocal extends Component {
         return(
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="select-local">Localidad</label>
+                    <label className="input-group-text label-titulo" htmlFor="select-local">Localidad</label>
                 </div>
                 <select className="custom-select" id="select-local" value={this.props.local} onChange={this.props.onChange}>
                     <option key={0} value="" disabled>Seleccione localidad</option>

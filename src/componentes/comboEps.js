@@ -43,7 +43,7 @@ class ComboEps extends Component {
         return(
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="select-eps">Eps</label>
+                    <label className="input-group-text label-titulo" htmlFor="select-eps">Eps</label>
                 </div>
                 <select className="custom-select" id="select-eps" value={this.props.eps} onChange={this.props.onChange}>
                     <option key={0} value={""} disabled>Seleccione empresa</option>

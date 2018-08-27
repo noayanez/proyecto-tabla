@@ -13,7 +13,7 @@ class ComboMes extends Component {
         return(
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="select-periodo">Mes</label>
+                    <label className="input-group-text label-titulo" htmlFor="select-periodo">Mes</label>
                 </div>
                 <select className="custom-select" id="select-periodo" value={this.props.mes} onChange={this.props.onChange}>
                     <option key={0} value="" disabled>Seleccione mes</option>

@@ -64,7 +64,7 @@ class ComboPeriodo extends Component {
         return(
             <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="select-periodo">Periodo</label>
+                    <label className="input-group-text label-titulo" htmlFor="select-periodo">Periodo</label>
                 </div>
                 <select className="custom-select" id="select-periodo" value={this.props.periodo} onChange={this.props.onChange}>
                     <option key={0} value="" disabled>Seleccione periodo</option>

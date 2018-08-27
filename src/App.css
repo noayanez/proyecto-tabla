@@ -1,38 +1,109 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Calibri';
 }
 
 .cabecera {
-  background-color: #222;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    background-color: #222;
+    padding: 20px;
+    color: white;
 }
 
 .card {
-    background: black;
     border : 1px #888;
     padding : 10px;
     align : center;
 }
 
-.btn-enviar {
+.label-titulo:hover{
+    background: #3399ff;
+}
 
+.label-titulo{
+
+}
+
+.btn-enviar {
+    color: black;
+    border : 1px;
+    border-color:  transparent;
+    border-radius: 5px;
+    padding: 8px 15px 8px 15px;
+	transition: background-color 0.5s ease;
+}
+
+.btn-enviar:hover {
+    background: #3399ff;
+    color: #ffffff;
+    text-shadow: none;
+}
+
+.formulario {
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 3px;
+    border-color: #e9edf0;
+    border-top-color: #78BBEC;
+
+}
+
+.opcion-select {
+    border-radius: 5px;
+}
+
+.logo-otass {
+    height:70px;
+}
+
+.celda-otass {
+    align-items: center;
+}
+
+.fa {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+    background: none;
+    line-height: 30px;
+    font-size: 16px;
+    text-align: center;
+    border: none;
+    text-shadow: none;
+    margin-left: 5px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    color: black;
+	transition: background-color 0.5s ease;
+    text-decoration: none;
+}
+
+.fa-facebook:hover {
+	background: #3a5795 !important;
+	color: #fff !important;
+    text-decoration: none;
+}
+.fa-twitter:hover  {
+	background: #1da1f2 !important;
+	color: #fff !important;
+    text-decoration: none;
+}
+.fa-flickr:hover  {
+	background: #0063DC !important;
+	color: #fff !important;
+    text-decoration: none;
+}
+.fa-linkedin:hover  {
+	background: #0177B5 !important;
+	color: #fff !important;
+    text-decoration: none;
+}
+.fa-youtube:hover {
+	background: #B62025 !important;
+	color: #fff !important;
+    text-decoration: none;
 }
