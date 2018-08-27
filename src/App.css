@@ -27,11 +27,12 @@
 }
 
 .card {
+    background: black;
     border : 1px #888;
     padding : 10px;
     align : center;
 }
 
 .btn-enviar {
-    
+
 }

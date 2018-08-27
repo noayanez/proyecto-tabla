@@ -11,7 +11,7 @@ class App extends Component {
     constructor(){
         super();
         this.state = {
-            hostname : "18.204.225.30:443",
+            hostname : "18.204.225.30:8443",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
