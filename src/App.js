@@ -144,7 +144,7 @@ class App extends Component {
                             <div className="row celda-otass">
                                 <div className="col-3"></div>
                                 <div className="col-6">
-                                    <a href="/">
+                                    <a href="http://www.otass.gob.pe/">
                                         <img className="logo-otass" src={require("./LOGO_VECTOR.png")}/>
                                     </a>
                                 </div>
