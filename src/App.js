@@ -11,7 +11,7 @@ class App extends Component {
     constructor(){
         super();
         this.state = {
-            hostname : "54.197.26.144:8443",
+            hostname : "18.204.225.30:8443",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
@@ -135,7 +135,8 @@ class App extends Component {
         const listado = this.state.dataSaldo;
         return (
             <div className="App">
-                <div className="cabecera">
+                <div className="card">
+                    <br/>
                     <div className="row">
                         <div className="col-1"></div>
                         <div className="col-3">
@@ -166,9 +167,10 @@ class App extends Component {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <button className="btn btn-primary" onClick={this.botonEnviar}>Enviar</button>
+                            <button className="btn-enviar" onClick={this.botonEnviar}>Enviar</button>
                         </div>
                     </div>
+                    <br/>
                 </div>
                 {this.state.alerta!==""?
                     (<div className="row">
@@ -185,7 +187,6 @@ class App extends Component {
 
                 {this.state.isTableLoaded?
                     (<div className="contenido-tabla">
-                        <br/>
                         <div className="row">
                             <div className="col-1"></div>
                             <div className="col-10">

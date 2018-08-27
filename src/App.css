@@ -25,3 +25,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.card {
+    border : 1px #888;
+    padding : 10px;
+    align : center;
+}
+
+.btn-enviar {
+    
+}
