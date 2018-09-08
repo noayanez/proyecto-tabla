@@ -1,8 +1,15 @@
 .App {
-    text-align: center;
     margin: 0px;
     padding: 0px;
     font-family: 'Calibri';
+}
+
+.centrado {
+    text-align: center;
+}
+
+.derecha {
+    text-align: right;
 }
 
 .cabecera {
@@ -14,7 +21,6 @@
 .card {
     border : 1px #888;
     padding : 10px;
-    align : center;
 }
 
 .label-titulo:hover{

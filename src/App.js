@@ -4,6 +4,7 @@ import ComboLocal from './componentes/comboLocal.js';
 import ComboPeriodo from './componentes/comboPeriodo.js';
 import ComboMes from './componentes/comboMes.js';
 import ComboTipo from './componentes/comboTipo.js';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +12,7 @@ class App extends Component {
     constructor(){
         super();
         this.state = {
-            hostname : "18.204.225.30:8443",
+            hostname : "18.212.80.64:8443",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
@@ -22,7 +23,8 @@ class App extends Component {
             mes : "",
             tipo : "",
             dataSaldo : [],
-            alerta : ""
+            alerta : "",
+            fechaActual : ""
         };
         this.handleChangeEps = this.handleChangeEps.bind(this);
         this.handleChangeLocal = this.handleChangeLocal.bind(this);
@@ -72,6 +74,10 @@ class App extends Component {
     }
 
     botonEnviar(eps,local,periodo,mes){
+        var f = new Date();
+        this.setState({
+            fechaActual : f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
+        });
         if(this.state.eps !== "" && this.state.local !== "" && this.state.periodo !== "" && this.state.mes !== "" && this.state.tipo !== ""){
             if(this.state.tipo === "1"){
                 this.fetchDataSaldo(this.state.eps,this.state.local,this.state.periodo,this.state.mes);
@@ -132,6 +138,22 @@ class App extends Component {
         });
     }
 
+    formatNumber(num,simbol=""){
+        var separador= ",";
+        var sepDecimal= '.';
+        num +='';
+        var splitStr = num.split('.');
+        var splitLeft = splitStr[0];
+        var splitRight = splitStr.length > 1 ? (
+            splitStr[1].length === 1? (sepDecimal + splitStr[1] + "0") : (sepDecimal + splitStr[1])
+        ) : ('');
+        var regx = /(\d+)(\d{3})/;
+        while (regx.test(splitLeft)) {
+            splitLeft = splitLeft.replace(regx, '$1' + separador + '$2');
+        }
+        return simbol + splitLeft + splitRight;
+    }
+
     render() {
         const listado = this.state.dataSaldo;
         return (
@@ -141,7 +163,7 @@ class App extends Component {
                         <div className="col-2"></div>
                         <div className="col-8 formulario">
                             <br/>
-                            <div className="row celda-otass">
+                            <div className="row celda-otass  centrado">
                                 <div className="col-3"></div>
                                 <div className="col-6">
                                     <a href="http://www.otass.gob.pe/">
@@ -159,7 +181,7 @@ class App extends Component {
                                 </div>
                             </div>
                             <hr/>
-                            <div className="row">
+                            <div className="row  centrado">
                                 <div className="col-4">
                                     <ComboEps eps={this.state.eps}
                                     onChange={this.handleChangeEps} hostname={this.state.hostname}/>
@@ -173,7 +195,7 @@ class App extends Component {
                                     onChange={this.handleChangePeriodo} hostname={this.state.hostname}/>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row centrado">
                                 <div className="col-4">
                                     <ComboMes mes={this.state.mes}
                                     onChange={this.handleChangeMes}/>
@@ -184,8 +206,27 @@ class App extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-3"></div>
+                                <div className="col-6 centrado">
                                     <button className="btn-enviar" onClick={this.botonEnviar}>Enviar</button>
+                                </div>
+                                <div className="col-3 derecha">
+                                    {this.state.isTableLoaded===true?(
+                                        <div className="btn-group" role="group" aria-label="Basic example">
+                                            <ReactHTMLTableToExcel
+                                                id="table-xls-button"
+                                                className="btn btn-success"
+                                                table="tabla-principal"
+                                                filename={"Consulta " + this.state.fechaActual}
+                                                sheet="Tabla 1"
+                                                buttonText="Excel"/>
+                                            <button className="btn btn-warning" disabled>PDF</button>
+                                        </div>):(
+                                        <div className="btn-group" role="group" aria-label="Basic example">
+                                            <button className="btn btn-warning" disabled>PDF</button>
+                                            <button className="btn btn-success" disabled>Excel</button>
+                                        </div>)
+                                    }
                                 </div>
                             </div>
                             <br/>
@@ -210,17 +251,22 @@ class App extends Component {
 
                 {this.state.isTableLoaded?
                     (<div className="contenido-tabla">
+                        <div className="row centrado">
+                            <div className="col-12">
+                                <p><b>Moneda : PEN Soles</b></p>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-2"></div>
                             <div className="col-8">
-                                <table className="table">
+                                <table className="table" id="tabla-principal">
                                     <thead className="thead-light">
                                         <tr>
                                             <th>Cuenta</th>
                                             <th>Descripcion de cuenta</th>
+                                            <th>Saldo anterior</th>
                                             <th>Ingresos</th>
                                             <th>Egresos</th>
-                                            <th>Saldo anterior</th>
                                             <th>Saldo final</th>
                                         </tr>
                                     </thead>
@@ -228,10 +274,10 @@ class App extends Component {
                                         <tr key={i}>
                                             <td>{dynamicData.cuenta}</td>
                                             <td align="left">{dynamicData.desc_cuenta}</td>
-                                            <td>{dynamicData.ingresos}</td>
-                                            <td>{dynamicData.egresos}</td>
-                                            <td>{dynamicData.saldo_anterior}</td>
-                                            <td>{dynamicData.saldo_final}</td>
+                                            <td align="right">{this.formatNumber(dynamicData.saldo_anterior)}</td>
+                                            <td align="right">{this.formatNumber(dynamicData.ingresos)}</td>
+                                            <td align="right">{this.formatNumber(dynamicData.egresos)}</td>
+                                            <td align="right">{this.formatNumber(dynamicData.saldo_final)}</td>
                                         </tr>
                                     )}
                                     </tbody>
