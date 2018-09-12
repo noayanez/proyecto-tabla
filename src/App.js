@@ -18,21 +18,26 @@ class App extends Component {
             isPeriodoLoaded : false,
             isTableLoaded : false,
             eps : "",
+            epsNombre : "",
             local : "",
             periodo : "",
             mes : "",
             tipo : "",
             dataSaldo : [],
             alerta : "",
-            fechaActual : ""
+            fechaActual : "",
+            fechaActualGuion : ""
         };
         this.handleChangeEps = this.handleChangeEps.bind(this);
+        this.handleChangeEpsNombre = this.handleChangeEpsNombre.bind(this);
         this.handleChangeLocal = this.handleChangeLocal.bind(this);
         this.handleChangePeriodo = this.handleChangePeriodo.bind(this);
         this.handleChangeMes = this.handleChangeMes.bind(this);
         this.handleChangeTipo = this.handleChangeTipo.bind(this);
         this.handleChangeDataSaldo = this.handleChangeDataSaldo.bind(this);
         this.botonEnviar = this.botonEnviar.bind(this);
+        this.formatNumber = this.formatNumber.bind(this);
+        this.roundNumber = this.roundNumber.bind(this);
         this.limpiarAlerta = this.limpiarAlerta.bind(this);
     }
 
@@ -64,6 +69,11 @@ class App extends Component {
         })
         .then((result) => {
             console.log(result);
+            if(result.length === 0){
+                this.setState({
+                    alerta : "No hay datos de la consulta."
+                })
+            }
             this.setState({
                 dataSaldo : result
             })
@@ -75,9 +85,31 @@ class App extends Component {
 
     botonEnviar(eps,local,periodo,mes){
         var f = new Date();
-        this.setState({
-            fechaActual : f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
-        });
+        if((f.getMonth() +1) < 10){
+            if(f.getDate() < 10){
+                this.setState({
+                    fechaActual : "0" + f.getDate() + "/0" + (f.getMonth() +1) + "/" + f.getFullYear(),
+                    fechaActualGuion : "0" + f.getDate() + "-0" + (f.getMonth() +1) + "-" + f.getFullYear()
+                });
+            }else{
+                this.setState({
+                    fechaActual : f.getDate() + "/0" + (f.getMonth() +1) + "/" + f.getFullYear(),
+                    fechaActualGuion : f.getDate() + "-0" + (f.getMonth() +1) + "-" + f.getFullYear()
+                });
+            }
+        }else{
+            if(f.getDate() < 10){
+                this.setState({
+                    fechaActual : "0" + f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear(),
+                    fechaActualGuion : "0" + f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
+                });
+            }else{
+                this.setState({
+                    fechaActual : f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear(),
+                    fechaActualGuion : f.getDate() + "-" + (f.getMonth() +1) + "-" + f.getFullYear()
+                });
+            }
+        }
         if(this.state.eps !== "" && this.state.local !== "" && this.state.periodo !== "" && this.state.mes !== "" && this.state.tipo !== ""){
             if(this.state.tipo === "1"){
                 this.fetchDataSaldo(this.state.eps,this.state.local,this.state.periodo,this.state.mes);
@@ -138,9 +170,29 @@ class App extends Component {
         });
     }
 
+    handleChangeEpsNombre(nombre){
+        this.setState({
+            epsNombre : nombre
+        })
+    }
+
+    roundNumber(num, scale = 2) {
+        if(!("" + num).includes("e")) {
+            return +(Math.round(num + "e+" + scale)  + "e-" + scale);
+        } else {
+            var arr = ("" + num).split("e");
+            var sig = ""
+            if(+arr[1] + scale > 0) {
+                sig = "+";
+            }
+            return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+        }
+    }
+
     formatNumber(num,simbol=""){
         var separador= ",";
         var sepDecimal= '.';
+        num = this.roundNumber(num,2);
         num +='';
         var splitStr = num.split('.');
         var splitLeft = splitStr[0];
@@ -151,11 +203,31 @@ class App extends Component {
         while (regx.test(splitLeft)) {
             splitLeft = splitLeft.replace(regx, '$1' + separador + '$2');
         }
+        if(splitRight===""){
+            splitRight = ".00";
+        }
         return simbol + splitLeft + splitRight;
     }
 
     render() {
         const listado = this.state.dataSaldo;
+        var sumSaldoIncial = 0;
+        var sumIngresos = 0;
+        var sumEgresos = 0;
+        var sumSaldoFinal = 0;
+        if(listado.length !== 0 ){
+            for(var i in listado){
+                sumSaldoIncial = sumSaldoIncial + listado[i].saldo_anterior;
+                sumIngresos = sumIngresos + listado[i].ingresos;
+                sumEgresos = sumEgresos + listado[i].egresos;
+                sumSaldoFinal = sumSaldoFinal + listado[i].saldo_final;
+            }
+            console.log(this.formatNumber(sumSaldoIncial));
+            console.log(this.formatNumber(sumIngresos));
+            console.log(this.formatNumber(sumEgresos));
+            console.log(this.formatNumber(sumSaldoFinal));
+        }
+
         return (
             <div className="App">
                 <div className="card">
@@ -167,16 +239,16 @@ class App extends Component {
                                 <div className="col-3"></div>
                                 <div className="col-6">
                                     <a href="http://www.otass.gob.pe/">
-                                        <img className="logo-otass" src={require("./LOGO_VECTOR.png")}/>
+                                        <img className="logo-otass" alt="Enlace página OTASS"src={require("./LOGO_VECTOR.png")}/>
                                     </a>
                                 </div>
                                 <div className="col-3">
                                     <div>
-    	                               <a className="fa fa-facebook" target="_blank" href="https://www.facebook.com/Organismo-T%C3%A9cnico-de-la-Administraci%C3%B3n-de-los-Servicios-de-Saneamiento-1169264316420107/?pnref=lhc"></a>
-                                       <a className="fa fa-twitter" target="_blank" href="https://twitter.com/OtassPeru"></a>
-                                       <a className="fa fa-flickr" target="_blank" href="https://www.flickr.com/people/140076448@N02/"></a>
-                                       <a className="fa fa-linkedin" target="_blank" href="https://www.linkedin.com/in/otassperu"></a>
-                                       <a className="fa fa-youtube" target="_blank" href="https://www.youtube.com/channel/UC7F8rA9vw-kTrSi3orChJRQ"></a>
+    	                               <a className="fa fa-facebook" target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/Organismo-T%C3%A9cnico-de-la-Administraci%C3%B3n-de-los-Servicios-de-Saneamiento-1169264316420107/?pnref=lhc">{null}</a>
+                                       <a className="fa fa-twitter" target="_blank" rel="noopener noreferrer" href="https://twitter.com/OtassPeru">{null}</a>
+                                       <a className="fa fa-flickr" target="_blank" rel="noopener noreferrer" href="https://www.flickr.com/people/140076448@N02/">{null}</a>
+                                       <a className="fa fa-linkedin" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/otassperu">{null}</a>
+                                       <a className="fa fa-youtube" target="_blank" rel="noopener noreferrer" href="https://www.youtube.com/channel/UC7F8rA9vw-kTrSi3orChJRQ">{null}</a>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +256,7 @@ class App extends Component {
                             <div className="row  centrado">
                                 <div className="col-4">
                                     <ComboEps eps={this.state.eps}
-                                    onChange={this.handleChangeEps} hostname={this.state.hostname}/>
+                                    onChange={this.handleChangeEps} onChange2={this.handleChangeEpsNombre} hostname={this.state.hostname}/>
                                 </div>
                                 <div className="col-4">
                                     <ComboLocal eps={this.state.eps} local={this.state.local}
@@ -208,23 +280,23 @@ class App extends Component {
                             <div className="row">
                                 <div className="col-3"></div>
                                 <div className="col-6 centrado">
-                                    <button className="btn-enviar" onClick={this.botonEnviar}>Enviar</button>
+                                    <button className="btn-enviar" onClick={this.botonEnviar}>Consultar</button>
                                 </div>
                                 <div className="col-3 derecha">
-                                    {this.state.isTableLoaded===true?(
+                                    {(this.state.isTableLoaded===true && listado.length!==0)?(
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ReactHTMLTableToExcel
                                                 id="table-xls-button"
                                                 className="btn btn-success"
-                                                table="tabla-principal"
-                                                filename={"Consulta " + this.state.fechaActual}
+                                                table="tabla-export"
+                                                filename={"Consulta " + this.state.fechaActualGuion}
                                                 sheet="Tabla 1"
                                                 buttonText="Excel"/>
                                             <button className="btn btn-warning" disabled>PDF</button>
                                         </div>):(
                                         <div className="btn-group" role="group" aria-label="Basic example">
-                                            <button className="btn btn-warning" disabled>PDF</button>
                                             <button className="btn btn-success" disabled>Excel</button>
+                                            <button className="btn btn-warning" disabled>PDF</button>
                                         </div>)
                                     }
                                 </div>
@@ -249,7 +321,7 @@ class App extends Component {
                     </div>):(null)
                 }
 
-                {this.state.isTableLoaded?
+                {(this.state.isTableLoaded && listado.length !==0)?
                     (<div className="contenido-tabla">
                         <div className="row centrado">
                             <div className="col-12">
@@ -262,12 +334,12 @@ class App extends Component {
                                 <table className="table" id="tabla-principal">
                                     <thead className="thead-light">
                                         <tr>
-                                            <th>Cuenta</th>
-                                            <th>Descripcion de cuenta</th>
-                                            <th>Saldo anterior</th>
-                                            <th>Ingresos</th>
-                                            <th>Egresos</th>
-                                            <th>Saldo final</th>
+                                            <th style={{"textAlign":"center"}}>Cuenta</th>
+                                            <th style={{"textAlign":"left"}}>Descripcion de cuenta</th>
+                                            <th style={{"textAlign":"right"}}>Saldo Inicial</th>
+                                            <th style={{"textAlign":"right"}}>Ingresos</th>
+                                            <th style={{"textAlign":"right"}}>Egresos</th>
+                                            <th style={{"textAlign":"right"}}>Saldo Final</th>
                                         </tr>
                                     </thead>
                                     <tbody>{listado.map((dynamicData, i) =>
@@ -285,7 +357,82 @@ class App extends Component {
                             </div>
                             <div className="col-2"></div>
                         </div>
-                    </div>):(null)}
+                        <div className="row">
+                            <div className="col-2"></div>
+                            <div className="col-8">
+                                <table id="tabla-export" style={{"visibility":"hidden"}}>
+                                    <tbody>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}} colSpan="3"><b>{this.state.epsNombre}</b></td>
+                                            <td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <th style={{"fontFamily": "Arial","fontSize": "16px"}} colSpan="7"><b>SALDOS - CAJA BANCOS AL {this.state.fechaActual}</b></th>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "14px"}} colSpan="2"><b>M O V I M I E N T O S </b></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <th></th><th></th><th></th>
+                                            <th style={{"fontFamily": "Courier New","fontSize": "13px"}}><b>SALDO INICIAL</b></th>
+                                            <th style={{"fontFamily": "Courier New","fontSize": "13px"}}><b>INGRESO</b></th>
+                                            <th style={{"fontFamily": "Courier New","fontSize": "13px"}}><b>EGRESO</b></th>
+                                            <th style={{"fontFamily": "Courier New","fontSize": "13px"}}><b>SALDO FINAL</b></th>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        {listado.map((dynamicData, i) =>
+                                            <tr key={i}>
+                                                <td style={{"fontFamily": "Courier New","fontSize": "12px"}}>{dynamicData.cuenta}</td>
+                                                <td colSpan="2" align="left" style={{"fontFamily": "Courier New","fontSize": "12px"}}>{dynamicData.desc_cuenta}</td>
+                                                <td align="right" style={{"fontFamily": "Courier New","fontSize": "12px"}}>{this.formatNumber(dynamicData.saldo_anterior)}</td>
+                                                <td align="right" style={{"fontFamily": "Courier New","fontSize": "12px"}}>{this.formatNumber(dynamicData.ingresos)}</td>
+                                                <td align="right" style={{"fontFamily": "Courier New","fontSize": "12px"}}>{this.formatNumber(dynamicData.egresos)}</td>
+                                                <td align="right" style={{"fontFamily": "Courier New","fontSize": "12px"}}>{this.formatNumber(dynamicData.saldo_final)}</td>
+                                            </tr>
+                                        )}
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td><td></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}}><b>TOTAL GENERAL:</b></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}}><b>{this.formatNumber(sumSaldoIncial)}</b></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}}><b>{this.formatNumber(sumIngresos)}</b></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}}><b>{this.formatNumber(sumEgresos)}</b></td>
+                                            <td style={{"fontFamily": "Courier New","fontSize": "12px"}}><b>{this.formatNumber(sumSaldoFinal)}</b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="col-2"></div>
+                        </div>
+                    </div>
+                    ):(null)}
             </div>
         );
     }

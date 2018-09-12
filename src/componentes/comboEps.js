@@ -7,6 +7,16 @@ class ComboEps extends Component {
         this.state = {
             dataEps : []
         }
+        this.onSelect = this.onSelect.bind(this);
+    }
+
+    onSelect(event){
+        this.props.onChange(event);
+        for(var i in this.state.dataEps){
+            if(parseInt(event.target.value,10) === this.state.dataEps[i].codigo){
+                this.props.onChange2(this.state.dataEps[i].nombre);
+            }
+        }
     }
 
     componentDidMount(){
@@ -45,7 +55,7 @@ class ComboEps extends Component {
                 <div className="input-group-prepend">
                     <label className="input-group-text label-titulo" htmlFor="select-eps">Eps</label>
                 </div>
-                <select className="custom-select" id="select-eps" value={this.props.eps} onChange={this.props.onChange}>
+                <select className="custom-select" id="select-eps" value={this.props.eps} onChange={this.onSelect}>
                     <option key={0} value={""} disabled>Seleccione empresa</option>
                     {this.crearOpcionesEps()}
                 </select>
