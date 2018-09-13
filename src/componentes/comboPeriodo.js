@@ -33,7 +33,7 @@ class ComboPeriodo extends Component {
             id_eps : parseInt(epsaux,10),
             id_local : parseInt(localaux,10)
         }
-        fetch("https://"+this.props.hostname+"/otass-rest/MainController/getYears", {
+        fetch(this.props.hostname+"/otass-rest/MainController/getYears", {
             method : 'POST',
             headers : {
                 accept : '*/*',

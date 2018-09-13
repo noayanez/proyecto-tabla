@@ -12,7 +12,7 @@ class App extends Component {
     constructor(){
         super();
         this.state = {
-            hostname : "18.212.80.64:8443",
+            hostname : "https://18.212.80.64:8443",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
@@ -56,7 +56,7 @@ class App extends Component {
             id_local : parseInt(local,10),
             periodo : periodo+mes
         }
-        fetch("https://"+this.state.hostname+"/otass-rest/MainController/getSaldos", {
+        fetch(this.state.hostname+"/otass-rest/MainController/getSaldos", {
             method : 'POST',
             headers : {
                 accept : '*/*',
