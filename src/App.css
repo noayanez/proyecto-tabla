@@ -113,3 +113,43 @@
 	color: #fff !important;
     text-decoration: none;
 }
+
+.botonCheck {
+    border: solid;
+    border-width: 1px;
+    height: 38px;
+    border-radius: 25px;
+    width: 100%;
+    color: #ced4da;
+    background-color: white;
+}
+
+.botonCheck:focus {
+    outline : 0px;
+}
+
+.botonCheck-activo {
+    border: white;
+    height: 38px;
+    border-radius: 25px;
+    width: 100%;
+    color: white;
+    background-color: #78BBEC;
+}
+
+.botonCheck-activo:focus {
+    outline: 0px;
+}
+
+.botonCheck-neutro {
+    border: white;
+    height: 38px;
+    border-radius: 25px;
+    width: 100%;
+    color: white;
+    background-color: #d6d8d9;
+}
+
+.botonCheck-neutro:focus {
+    outline: 0px;
+}

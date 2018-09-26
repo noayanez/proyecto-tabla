@@ -46,7 +46,7 @@ class ComboLocal extends Component {
     crearOpcionesLocal(){
         const objs = [];
         for(var i in this.state.dataLocal){
-            objs.push(<option key={i+1} value={this.state.dataLocal[i].codigo}>{this.state.dataLocal[i].nombre}</option>)
+            objs.push(<option key={i+2} value={this.state.dataLocal[i].codigo}>{this.state.dataLocal[i].nombre}</option>)
         }
         return objs;
     }
@@ -59,6 +59,7 @@ class ComboLocal extends Component {
                 </div>
                 <select className="custom-select" id="select-local" value={this.props.local} onChange={this.props.onChange}>
                     <option key={0} value="" disabled>Seleccione localidad</option>
+                    <option key={1} value="-1">Todas</option>
                     {this.crearOpcionesLocal()}
                 </select>
             </div>

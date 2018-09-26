@@ -7,12 +7,22 @@ class ComboPeriodo extends Component {
         this.state = {
             dataPeriodo : [],
             eps : props.eps,
-            local : props.local
+            local: props.local,
+            tipo: props.tipo
         }
     }
 
     componentDidUpdate(){
-        if(this.state.local !== this.props.local){
+        if(this.state.tipo !== this.props.tipo && this.props.local !== ""){
+            this.props.vaciarPeriodo();
+            this.setState({
+                dataPeriodo: [],
+                tipo : this.props.tipo
+            });
+            this.fetchDataPeriodo(this.props.eps,this.props.local);
+        }
+        if(this.state.local !== this.props.local && this.props.tipo !== ""){
+            this.props.vaciarPeriodo();
             this.setState({
                 dataPeriodo: [],
                 local : this.props.local
@@ -28,12 +38,22 @@ class ComboPeriodo extends Component {
         }
     }
 
-    fetchDataPeriodo(epsaux,localaux){
+    fetchDataPeriodo(epsaux, localaux) {
+        var tipoString = "";
+        if (this.props.tipo === "1") {
+            tipoString = "saldos";
+        } else {
+            if (this.props.tipo === "2") {
+                tipoString = "flujos";
+            } else {
+                tipoString = "variables";
+            }
+        }
         const data = {
             id_eps : parseInt(epsaux,10),
             id_local : parseInt(localaux,10)
         }
-        fetch(this.props.hostname+"/otass-rest/MainController/getYears", {
+        fetch(this.props.hostname+"/otass-rest/MainController/"+tipoString+"/getYears", {
             method : 'POST',
             headers : {
                 accept : '*/*',
