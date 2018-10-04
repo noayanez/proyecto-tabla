@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import ComboEps from './componentes/comboEps.js';
 import ComboLocal from './componentes/comboLocal.js';
 import ComboPeriodo from './componentes/comboPeriodo.js';
+import BtnExportFlujos from './componentes/BtnExportFlujos.js';
+import BtnExportSaldos from './componentes/BtnExportSaldos.js';
+import BtnExportVariables from './componentes/BtnExportVariables.js';
 import ComboMes from './componentes/comboMes.js';
 import ComboTipo from './componentes/comboTipo.js';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
@@ -21,14 +24,15 @@ class App extends Component {
             mes : "",
             tipo : "",
             tipoReal : "",
-            dataSaldo: [],
+            dataSaldo : [],
             alerta : "",
             fechaActual : "",
             fechaActualGuion : "",
             isEpsLoaded : false,
             isLocalLoaded : false,
             isPeriodoLoaded : false,
-            isTableLoaded : false
+            isTableLoaded : false,
+            tableData : []
         };
         this.handleChangeEps = this.handleChangeEps.bind(this);
         this.vaciarTodo = this.vaciarTodo.bind(this);
@@ -44,6 +48,7 @@ class App extends Component {
         this.roundNumber = this.roundNumber.bind(this);
         this.limpiarAlerta = this.limpiarAlerta.bind(this);
         this.handleChangeFiltrar = this.handleChangeFiltrar.bind(this);
+        this.ordenarTableData = this.ordenarTableData.bind(this);
     }
 
     handleChangeFiltrar(){
@@ -68,6 +73,68 @@ class App extends Component {
         this.setState({
             alerta : ""
         })
+    }
+
+    ordenarTableData(result){
+        var arrayaux = [];
+        if(this.state.tipo ==="1"){
+            for(var i in result){
+                arrayaux.push({
+                    "cuenta":(result[i].cuenta),
+                    "desc_cuenta":(result[i].desc_cuenta),
+                    "saldo_anterior":(this.formatNumber(result[i].saldo_anterior)),
+                    "ingresos":(this.formatNumber(result[i].ingresos)),
+                    "egresos":(this.formatNumber(result[i].egresos)),
+                    "saldo_final":(this.formatNumber(result[i].saldo_final))
+                });
+            }
+            this.setState({
+                tableData : arrayaux
+            });
+        }else{
+            if(this.state.tipo ==="2"){
+                for(var j in result){
+                    arrayaux.push({
+                        "grupo":(result[j].grupo),
+                        "ngrupo":(result[j].ngrupo),
+                        "grupoa":(result[j].grupoa),
+                        "ngrupoa":(result[j].ngrupoa),
+                        "grupob":(result[j].grupob),
+                        "ngrupob":(result[j].ngrupob),
+                        "enero":(this.formatNumber(result[j].enero)),
+                        "febrero":(this.formatNumber(result[j].febrero)),
+                        "marzo":(this.formatNumber(result[j].marzo)),
+                        "abril":(this.formatNumber(result[j].abril)),
+                        "mayo":(this.formatNumber(result[j].mayo)),
+                        "junio":(this.formatNumber(result[j].junio)),
+                        "julio":(this.formatNumber(result[j].julio)),
+                        "agosto":(this.formatNumber(result[j].agosto)),
+                        "septiembre":(this.formatNumber(result[j].septiembre)),
+                        "octubre":(this.formatNumber(result[j].octubre)),
+                        "noviembre":(this.formatNumber(result[j].noviembre)),
+                        "diciembre":(this.formatNumber(result[j].diciembre))
+                    });
+                }
+                this.setState({
+                    tableData : arrayaux
+                });
+            }else{
+                if(this.state.tipo ==="3"){
+                    for(var k in result){
+                        arrayaux.push({
+                            "fecha_registro":(result[k].fecha_registro),
+                            "codigo":(result[k].codigo),
+                            "nombre":(result[k].nombre),
+                            "valor":(this.formatNumber(result[k].valor)),
+                            "simbolo":(result[k].simbolo)
+                        });
+                    }
+                    this.setState({
+                        tableData : arrayaux
+                    });
+                }
+            }
+        }
     }
 
     fetchData(eps,local,periodo,mes){
@@ -105,11 +172,13 @@ class App extends Component {
             if(result.length === 0){
                 this.setState({
                     alerta : "No hay datos de la consulta."
-                })
+                });
+            }else{
+                this.ordenarTableData(result);
             }
             this.setState({
                 dataSaldo : result
-            })
+            });
         });
         this.setState({
             tipoReal : this.state.tipo
@@ -263,7 +332,9 @@ class App extends Component {
     }
 
     render() {
+        console.log("listado 1");
         const listado = this.state.dataSaldo;
+        console.log(listado);
         var sumSaldoIncial = 0;
         var sumIngresos = 0;
         var sumEgresos = 0;
@@ -276,7 +347,9 @@ class App extends Component {
                 sumSaldoFinal = sumSaldoFinal + listado[i].saldo_final;
             }
         }
-
+        const listado2 = this.state.tableData;
+        console.log("listado 2");
+        console.log(listado2);
         return (
             <div className="App">
                 <div className="container-fluid">
@@ -318,7 +391,6 @@ class App extends Component {
                                             }
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className="col-4">
                                     <ComboLocal eps={this.state.eps} local={this.state.local}
@@ -346,7 +418,7 @@ class App extends Component {
                                     <button className="btn-enviar" onClick={this.botonEnviar}>Consultar</button>
                                 </div>
                                 <div className="col-3 derecha">
-                                    {(this.state.isTableLoaded===true && listado.length!==0)?(
+                                    {(this.state.isTableLoaded===true && listado.length!==0 && listado2.length !==0 )?(
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ReactHTMLTableToExcel
                                                 id="table-xls-button"
@@ -354,8 +426,25 @@ class App extends Component {
                                                 table="tabla-export"
                                                 filename={"Consulta " + this.state.fechaActualGuion}
                                                 sheet="Tabla 1"
-                                                buttonText="Excel"/>
-                                            <button className="btn btn-warning" disabled>PDF</button>
+                                                buttonText="Excel"
+                                            />
+                                            {(this.state.isTableLoaded && listado.length !==0 && listado2.length !==0 && this.state.tipoReal === "1")?
+                                                (
+                                                    <BtnExportSaldos tableData={this.state.tableData} epsNombre={this.state.epsNombre} fechaActual={listado[0].fecha_registro}/>
+                                                ):(
+                                                    this.state.tipoReal === "2"?
+                                                        (
+                                                            <BtnExportFlujos tableData={this.state.tableData} fechaActual={listado[0].fecha_registro}/>
+                                                        ):(
+                                                            this.state.tipoReal === "3"?
+                                                                (
+                                                                    <BtnExportVariables tableData={this.state.tableData} epsNombre={this.state.epsNombre} fechaActual={listado[0].fecha_registro}/>
+                                                                ):(
+                                                                    <button className="btn btn-warning" disabled>PDF</button>
+                                                                )
+                                                        )
+                                                )
+                                            }
                                         </div>):(
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <button className="btn btn-success" disabled>Excel</button>

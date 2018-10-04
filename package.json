@@ -3,6 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "jspdf": "^1.4.1",
+        "jspdf-autotable": "^2.3.5",
         "react": "^16.4.2",
         "react-dom": "^16.4.2",
         "react-html-table-to-excel": "^2.0.0",
